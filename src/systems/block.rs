@@ -2,8 +2,7 @@ use amethyst::core::SystemDesc;
 use amethyst::derive::SystemDesc;
 use amethyst::ecs::{Entities, Join, ReadStorage, System, SystemData, World, WriteStorage};
 
-use crate::config::GameConfig;
-use crate::gameplay::{Ball, Block, Collider, Collision, Paddle};
+use crate::gameplay::Block;
 #[derive(SystemDesc)]
 pub struct BlockSystem;
 

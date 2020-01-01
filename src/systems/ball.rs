@@ -52,7 +52,7 @@ impl<'a> System<'a> for BounceBallSystem {
                 // xform.set_translation_y(max_y);
                 ball.velocity_y *= -1.0;
             }
-            for (_paddle, paddle_xform, paddle_collider) in (&paddles, &xforms, &colliders).join() {
+            for (_paddle, paddle_collider) in (&paddles, &colliders).join() {
                 match ball_collider.collide(&paddle_collider) {
                     Collision::NoCollision => (),
                     Collision::CollideLeft => {
@@ -68,9 +68,7 @@ impl<'a> System<'a> for BounceBallSystem {
                         ball.velocity_y = ball.velocity_y.abs();
                     }
                 };
-                for (mut block, block_xform, block_collider) in
-                    (&mut blocks, &xforms, &colliders).join()
-                {
+                for (mut block, block_collider) in (&mut blocks, &colliders).join() {
                     match ball_collider.collide(&block_collider) {
                         Collision::NoCollision => (),
                         Collision::CollideLeft => {
