@@ -1,0 +1,12 @@
+[package]
+name = "blocks"
+version = "0.1.0"
+authors = []
+edition = "2018"
+
+[dependencies]
+amethyst = "0.13.0"
+serde = "1.0"
+[features]
+metal = ["amethyst/metal"]
+vulkan = ["amethyst/vulkan"]

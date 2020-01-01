@@ -1,0 +1,12 @@
+(
+    level_width: 1280,
+    level_height: 720,
+    ball_radius: 15,
+    ball_velocity: 1.5,
+    paddle_height: 40,
+    paddle_width: 160,
+    paddle_speed: 10,
+    block_width: 80,
+    block_height: 40,
+    block_margin: 5
+)

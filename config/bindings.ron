@@ -1,0 +1,7 @@
+(axes:
+ {
+     "paddle": Emulated(neg: Key(Left), pos: Key(Right)),
+ }, actions: {
+     "pause": [[Key(Space)]]
+}
+ )
