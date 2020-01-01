@@ -26,31 +26,21 @@ impl Collider {
         self.bottom += xform.translation().y - self.xform.translation().y;
         self.xform = xform.clone();
     }
-    pub fn collide(&self, other: &Collider) -> Collision {
+    pub fn collide(&self, other: &Collider, dx: f32, dy: f32) -> Collision {
         if self.right < other.left
             || self.left > other.right
             || self.top < other.bottom
             || self.bottom > other.top
         {
             Collision::NoCollision
+        } else if self.left - dx > other.right {
+            Collision::CollideLeft
+        } else if self.right - dx < other.left {
+            Collision::CollideRight
+        } else if self.top - dy < other.bottom {
+            Collision::CollideUp
         } else {
-            let x = (self.left + self.right) / 2.0;
-            let y = (self.top + self.bottom) / 2.0;
-            let ox = (other.left + other.right) / 2.0;
-            let oy = (other.top + other.bottom) / 2.0;
-            if ((x - ox) / (other.right - other.left)).abs()
-                > ((y - oy) / (other.top - other.bottom)).abs()
-            {
-                if x < ox {
-                    Collision::CollideRight
-                } else {
-                    Collision::CollideLeft
-                }
-            } else if y < oy {
-                Collision::CollideUp
-            } else {
-                Collision::CollideDown
-            }
+            Collision::CollideDown
         }
     }
 }

@@ -70,7 +70,7 @@ fn initialize_ball(world: &mut World, sprite_sheet: Handle<SpriteSheet>, cfg: &G
         .with(sprite_render)
         .with(Ball {
             velocity_x: cfg.ball_velocity * 3.0,
-            velocity_y: cfg.ball_velocity * 3.0,
+            velocity_y: cfg.ball_velocity * 2.0,
         })
         .with(xform)
         .with(collider)

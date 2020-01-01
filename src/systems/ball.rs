@@ -53,13 +53,13 @@ impl<'a> System<'a> for BounceBallSystem {
                 ball.velocity_y *= -1.0;
             }
             for (_paddle, paddle_collider) in (&paddles, &colliders).join() {
-                match ball_collider.collide(&paddle_collider) {
+                match ball_collider.collide(&paddle_collider, ball.velocity_x, ball.velocity_y) {
                     Collision::NoCollision => (),
                     Collision::CollideLeft => {
-                        ball.velocity_x = -ball.velocity_x.abs();
+                        ball.velocity_x = ball.velocity_x.abs();
                     }
                     Collision::CollideRight => {
-                        ball.velocity_x = ball.velocity_x.abs();
+                        ball.velocity_x = -ball.velocity_x.abs();
                     }
                     Collision::CollideUp => {
                         ball.velocity_y = -ball.velocity_y.abs();
@@ -68,26 +68,31 @@ impl<'a> System<'a> for BounceBallSystem {
                         ball.velocity_y = ball.velocity_y.abs();
                     }
                 };
+
+                let mut dx = ball.velocity_x;
+                let mut dy = ball.velocity_y;
                 for (mut block, block_collider) in (&mut blocks, &colliders).join() {
-                    match ball_collider.collide(&block_collider) {
+                    match ball_collider.collide(&block_collider, ball.velocity_x, ball.velocity_y) {
                         Collision::NoCollision => (),
                         Collision::CollideLeft => {
-                            ball.velocity_x = -ball.velocity_x.abs();
+                            dx = ball.velocity_x.abs();
                             block.health -= 1.0;
                         }
                         Collision::CollideRight => {
-                            ball.velocity_x = ball.velocity_x.abs();
+                            dx = -ball.velocity_x.abs();
                             block.health -= 1.0;
                         }
                         Collision::CollideUp => {
-                            ball.velocity_y = -ball.velocity_y.abs();
+                            dy = -ball.velocity_y.abs();
                             block.health -= 1.0;
                         }
                         Collision::CollideDown => {
-                            ball.velocity_y = ball.velocity_y.abs();
+                            dy = ball.velocity_y.abs();
                             block.health -= 1.0;
                         }
-                    };
+                    }
+                    ball.velocity_x = dx;
+                    ball.velocity_y = dy;
                 }
             }
         }
