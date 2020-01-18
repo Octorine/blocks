@@ -1,9 +1,11 @@
+use crate::config::GameConfig;
+use crate::gameplay::{Ball, Block, Collider, Collision, Paddle, UiModel, UiViews};
 use amethyst::core::{SystemDesc, Transform};
 use amethyst::derive::SystemDesc;
-use amethyst::ecs::{Join, Read, ReadStorage, System, SystemData, World, WriteStorage};
-
-use crate::config::GameConfig;
-use crate::gameplay::{Ball, Block, Collider, Collision, Paddle};
+use amethyst::ecs::{
+    Join, Read, ReadExpect, ReadStorage, System, SystemData, World, Write, WriteStorage,
+};
+use amethyst::ui::UiText;
 #[derive(SystemDesc)]
 pub struct MoveBallSystem;
 
@@ -35,9 +37,15 @@ impl<'a> System<'a> for BounceBallSystem {
         ReadStorage<'a, Paddle>,
         ReadStorage<'a, Collider>,
         WriteStorage<'a, Block>,
+        WriteStorage<'a, UiText>,
+        ReadExpect<'a, UiViews>,
+        Write<'a, UiModel>,
         Read<'a, GameConfig>,
     );
-    fn run(&mut self, (mut balls, xforms, paddles, colliders, mut blocks, cfg): Self::SystemData) {
+    fn run(
+        &mut self,
+        (mut balls, xforms, paddles, colliders, mut blocks, mut ui_text, views, mut model, cfg): Self::SystemData,
+    ) {
         for (mut ball, ball_xform, ball_collider) in (&mut balls, &xforms, &colliders).join() {
             let x = ball_xform.translation().x;
             let y = ball_xform.translation().y;
@@ -77,18 +85,42 @@ impl<'a> System<'a> for BounceBallSystem {
                         Collision::CollideLeft => {
                             dx = ball.velocity_x.abs();
                             block.health -= 1.0;
+                            if block.health < 0.5 {
+                                model.score += 1;
+                                if let Some(txt) = ui_text.get_mut(views.score) {
+                                    txt.text = model.score.to_string();
+                                }
+                            }
                         }
                         Collision::CollideRight => {
                             dx = -ball.velocity_x.abs();
                             block.health -= 1.0;
+                            if block.health < 0.5 {
+                                model.score += 1;
+                                if let Some(txt) = ui_text.get_mut(views.score) {
+                                    txt.text = model.score.to_string();
+                                }
+                            }
                         }
                         Collision::CollideUp => {
                             dy = -ball.velocity_y.abs();
                             block.health -= 1.0;
+                            if block.health < 0.5 {
+                                model.score += 1;
+                                if let Some(txt) = ui_text.get_mut(views.score) {
+                                    txt.text = model.score.to_string();
+                                }
+                            }
                         }
                         Collision::CollideDown => {
                             dy = ball.velocity_y.abs();
                             block.health -= 1.0;
+                            if block.health < 0.5 {
+                                model.score += 1;
+                                if let Some(txt) = ui_text.get_mut(views.score) {
+                                    txt.text = model.score.to_string();
+                                }
+                            }
                         }
                     }
                     ball.velocity_x = dx;

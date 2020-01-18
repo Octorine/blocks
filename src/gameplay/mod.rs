@@ -3,12 +3,14 @@ mod block;
 mod collider;
 mod paddle;
 mod spritesheet;
+mod ui;
 
 pub use self::ball::Ball;
 pub use self::block::Block;
 pub use self::collider::{Collider, Collision};
 pub use self::paddle::Paddle;
 use self::spritesheet::load_sprite_sheet;
+pub use self::ui::{initialize_ui, UiModel, UiViews};
 use crate::config::GameConfig;
 use amethyst::assets::Handle;
 use amethyst::config::Config;
@@ -35,6 +37,7 @@ impl SimpleState for BlocksGame {
         initialize_ball(world, ss.clone(), &cfg);
         initialize_paddle(world, ss.clone(), &cfg);
         initialize_blocks(world, ss, &cfg);
+        initialize_ui(world);
     }
 }
 
@@ -104,8 +107,8 @@ fn initialize_paddle(world: &mut World, sprite_sheet: Handle<SpriteSheet>, cfg: 
 fn initialize_blocks(world: &mut World, sprite_sheet: Handle<SpriteSheet>, cfg: &GameConfig) {
     let mut block_type = 0;
     let number_of_columns = 13;
-    let number_of_rows = 6;
-    let top_margin = cfg.block_height * 0.5;
+    let number_of_rows = 5;
+    let top_margin = cfg.block_height * 0.5 + 50.;
     let left_margin = cfg.block_width * 0.5
         + (cfg.level_width
             - (number_of_columns as f32 * cfg.block_width
