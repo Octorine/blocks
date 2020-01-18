@@ -2,6 +2,7 @@ mod config;
 mod gameplay;
 mod systems;
 use amethyst::input::{InputBundle, StringBindings};
+use amethyst::ui::{RenderUi, UiBundle};
 use amethyst::{
     core::transform::TransformBundle,
     prelude::*,
@@ -12,6 +13,7 @@ use amethyst::{
     },
     utils::application_root_dir,
 };
+
 use gameplay::*;
 fn main() -> amethyst::Result<()> {
     amethyst::start_logger(Default::default());
@@ -34,10 +36,12 @@ fn main() -> amethyst::Result<()> {
                         1.0,
                     ]),
                 )
-                .with_plugin(RenderFlat2D::default()),
+                .with_plugin(RenderFlat2D::default())
+                .with_plugin(RenderUi::default()),
         )?
         .with_bundle(TransformBundle::new())?
         .with_bundle(InputBundle::<StringBindings>::new().with_bindings_from_file(bindings_path)?)?
+        .with_bundle(UiBundle::<StringBindings>::new())?
         .with(systems::PaddleSystem, "paddle_system", &[])
         .with(
             systems::BounceBallSystem,
