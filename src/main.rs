@@ -57,7 +57,8 @@ fn main() -> amethyst::Result<()> {
             systems::BlockSystem,
             "block_system",
             &["bounce_ball_system"],
-        );
+        )
+        .with(systems::LifeSystem, "life_system", &["move_ball_system"]);
     let mut game = Application::new(assets_dir, BlocksGame, game_data)?;
     game.run();
 
